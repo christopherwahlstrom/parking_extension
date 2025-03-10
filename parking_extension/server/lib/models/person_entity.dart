@@ -6,9 +6,11 @@ class PersonEntity {
   final List<String> vehiclesIds;
   final String id;
 
-  PersonEntity(
-      {required this.description, required this.vehiclesIds, required this.id});
-
+  PersonEntity({
+    required this.description,
+    required this.vehiclesIds,
+    required this.id,
+  });
 
   factory PersonEntity.fromJson(Map<String, dynamic> json) {
     return PersonEntity(
@@ -27,18 +29,23 @@ class PersonEntity {
   }
 
   Future<Person> toModel() async {
-    final vehicles =
-        await Future.wait(vehiclesIds.map((id) => VehicleRepository().getById(id)));
+    final vehicles = await Future.wait(
+      vehiclesIds.map((id) => VehicleRepository().getById(id)),
+    );
     return Person(
-        description: description, vehicles: vehicles.nonNulls.toList(), id: id);
+      description: description,
+      vehicles: vehicles.whereType<Vehicle>().toList(),
+      id: id,
+    );
   }
 }
 
-extension EntityCoversion on Person {
+extension EntityConversion on Person {
   PersonEntity toEntity() {
     return PersonEntity(
-        description: description,
-        vehiclesIds: vehicles.map((vehicle) => vehicle.id).toList(),
-        id: id);
+      description: description,
+      vehiclesIds: vehicles.map((vehicle) => vehicle.id).toList(),
+      id: id,
+    );
   }
 }

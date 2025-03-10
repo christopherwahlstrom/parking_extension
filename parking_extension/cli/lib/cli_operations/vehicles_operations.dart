@@ -8,7 +8,7 @@ VehicleRepository repository = VehicleRepository();
 
 class VehiclesOperations {
   static Future create() async {
-    print('Enter description: ');
+    print('Enter description (car or motorcycle): ');
 
     var input = stdin.readLineSync();
 

@@ -9,7 +9,7 @@ PersonRepository repository = PersonRepository();
 
 class PersonsOperations {
   static Future create() async {
-    print('Enter description: ');
+    print('Enter name: ');
 
     var input = stdin.readLineSync();
 
