@@ -49,7 +49,7 @@ class PersonsOperations {
 
         print(
             "What would you like to update in person: ${person.description} - [${person.vehicles.map((e) => e.description).join(", ")}]?");
-        print('1. Update description');
+        print('1. Update Name');
         print('2. Add vehicle to person');
         print('3. Remove vehicle from person');
 
