@@ -13,15 +13,15 @@ class MainMenu {
 
       // prompt options to edit items, bags, or exit
       print('Main Menu');
-      print('1. Manage Vehicles');
-      print('2. Manage Persons');
+      print('1. Manage Persons');
+      print('2. Manage Vehicles');
       print('3. Exit');
       var input = Console.choice();
       switch (input) {
         case 1:
-          await VehiclesMenu.prompt();
-        case 2:
           await PersonsMenu.prompt();
+        case 2:
+          await VehiclesMenu.prompt();
         case 3:
           return;
         default:
