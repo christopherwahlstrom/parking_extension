@@ -8,12 +8,31 @@ VehicleRepository repository = VehicleRepository();
 
 class VehiclesOperations {
   static Future create() async {
-    print('Enter description (car or motorcycle): ');
+    print('Enter registreringsnummer: ');
+    var registreringsnummer = stdin.readLineSync();
 
-    var input = stdin.readLineSync();
+    print('Enter typ (car, motorcycle, etc.): ');
+    var typ = stdin.readLineSync();
 
-    if (Validator.isString(input)) {
-      Vehicle vehicle = Vehicle(input!);
+    print('Enter owner name: ');
+    var ownerName = stdin.readLineSync();
+
+    print('Enter owner personnummer: ');
+    var ownerPersonnummer = stdin.readLineSync();
+
+    if (Validator.isString(registreringsnummer) && Validator.isString(typ) && Validator.isString(ownerName) && Validator.isString(ownerPersonnummer)) {
+      Person owner = Person(
+        namn: ownerName!,
+        personnummer: ownerPersonnummer!,
+        vehicles: [],
+      );
+
+      Vehicle vehicle = Vehicle(
+        registreringsnummer: registreringsnummer!,
+        typ: typ!,
+        owner: owner,
+      );
+
       await repository.create(vehicle);
       print('Vehicle created');
     } else {
@@ -22,31 +41,47 @@ class VehiclesOperations {
   }
 
   static Future list() async {
-    List<Vehicle> allvehicles = await repository.getAll();
-    for (int i = 0; i < allvehicles.length; i++) {
-      print('${i + 1}. ${allvehicles[i].description}');
+    List<Vehicle> allVehicles = await repository.getAll();
+    for (int i = 0; i < allVehicles.length; i++) {
+      print('${i + 1}. ${allVehicles[i].registreringsnummer} - ${allVehicles[i].typ} - Owner: ${allVehicles[i].owner.namn}');
     }
   }
 
   static Future update() async {
     print('Pick an index to update: ');
-    List<Vehicle> allvehicles = await repository.getAll();
-    for (int i = 0; i < allvehicles.length; i++) {
-      print('${i + 1}. ${allvehicles[i].description}');
+    List<Vehicle> allVehicles = await repository.getAll();
+    for (int i = 0; i < allVehicles.length; i++) {
+      print('${i + 1}. ${allVehicles[i].registreringsnummer} - ${allVehicles[i].typ} - Owner: ${allVehicles[i].owner.namn}');
     }
 
     String? input = stdin.readLineSync();
 
-    if (Validator.isIndex(input, allvehicles)) {
+    if (Validator.isIndex(input, allVehicles)) {
       int index = int.parse(input!) - 1;
-      Vehicle vehicle = allvehicles[index];
+      Vehicle vehicle = allVehicles[index];
 
-      print('Enter new description: ');
-      var description = stdin.readLineSync();
+      print('Enter new registreringsnummer: ');
+      var registreringsnummer = stdin.readLineSync();
 
-      if (Validator.isString(description)) {
-        vehicle.description = description!;
-        await repository.update(allvehicles[index].id, vehicle);
+      print('Enter new typ (car, motorcycle, etc.): ');
+      var typ = stdin.readLineSync();
+
+      print('Enter new owner name: ');
+      var ownerName = stdin.readLineSync();
+
+      print('Enter new owner personnummer: ');
+      var ownerPersonnummer = stdin.readLineSync();
+
+      if (Validator.isString(registreringsnummer) && Validator.isString(typ) && Validator.isString(ownerName) && Validator.isString(ownerPersonnummer)) {
+        vehicle.registreringsnummer = registreringsnummer!;
+        vehicle.typ = typ!;
+        vehicle.owner = Person(
+          namn: ownerName!,
+          personnummer: ownerPersonnummer!,
+          vehicles: [],
+        );
+
+        await repository.update(allVehicles[index].id, vehicle);
         print('Vehicle updated');
       } else {
         print('Invalid input');
@@ -58,16 +93,16 @@ class VehiclesOperations {
 
   static Future delete() async {
     print('Pick an index to delete: ');
-    List<Vehicle> allvehicles = await repository.getAll();
-    for (int i = 0; i < allvehicles.length; i++) {
-      print('${i + 1}. ${allvehicles[i].description}');
+    List<Vehicle> allVehicles = await repository.getAll();
+    for (int i = 0; i < allVehicles.length; i++) {
+      print('${i + 1}. ${allVehicles[i].registreringsnummer} - ${allVehicles[i].typ} - Owner: ${allVehicles[i].owner.namn}');
     }
 
     String? input = stdin.readLineSync();
 
-    if (Validator.isIndex(input, allvehicles)) {
+    if (Validator.isIndex(input, allVehicles)) {
       int index = int.parse(input!) - 1;
-      await repository.delete(allvehicles[index].id);
+      await repository.delete(allVehicles[index].id);
       print('Vehicle deleted');
     } else {
       print('Invalid input');

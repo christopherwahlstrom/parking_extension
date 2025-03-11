@@ -2,27 +2,32 @@ import 'package:server/repositories/vehicle_repository.dart';
 import 'package:shared/shared.dart';
 
 class PersonEntity {
-  final String description;
+  final String namn;
+  final String personnummer;
   final List<String> vehiclesIds;
   final String id;
 
   PersonEntity({
-    required this.description,
+    required this.namn,
+    required this.personnummer,
     required this.vehiclesIds,
     required this.id,
   });
 
   factory PersonEntity.fromJson(Map<String, dynamic> json) {
     return PersonEntity(
-      description: json['description'],
-      vehiclesIds: (json['vehiclesIds'] as List).map((e) => e as String).toList(),
+      namn: json['namn'],
+      personnummer: json['personnummer'],
+      vehiclesIds:
+          (json['vehiclesIds'] as List).map((e) => e as String).toList(),
       id: json['id'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      "description": description,
+      "namn": namn,
+      "personummer": personnummer,
       "vehiclesIds": vehiclesIds,
       "id": id,
     };
@@ -33,7 +38,8 @@ class PersonEntity {
       vehiclesIds.map((id) => VehicleRepository().getById(id)),
     );
     return Person(
-      description: description,
+      namn: namn,
+      personnummer: personnummer,
       vehicles: vehicles.whereType<Vehicle>().toList(),
       id: id,
     );
@@ -43,7 +49,8 @@ class PersonEntity {
 extension EntityConversion on Person {
   PersonEntity toEntity() {
     return PersonEntity(
-      description: description,
+      namn: namn,
+      personnummer: personnummer,
       vehiclesIds: vehicles.map((vehicle) => vehicle.id).toList(),
       id: id,
     );
