@@ -1,16 +1,15 @@
 import 'package:uuid/uuid.dart';
-import 'person.dart';
 
 class Vehicle {
   String registreringsnummer;
   String typ;
-  Person owner;
+  String ownerId;
   String id;
 
   Vehicle({
     required this.registreringsnummer,
     required this.typ,
-    required this.owner,
+    required this.ownerId,
     String? id,
   }) : id = id ?? Uuid().v4();
 
@@ -18,7 +17,7 @@ class Vehicle {
     return Vehicle(
       registreringsnummer: json['registreringsnummer'],
       typ: json['typ'],
-      owner: Person.fromJson(json['owner']),
+      ownerId: json['ownerId'],
       id: json['id'],
     );
   }
@@ -27,7 +26,7 @@ class Vehicle {
     return {
       'registreringsnummer': registreringsnummer,
       'typ': typ,
-      'owner': owner.toJson(),
+      'ownerId': ownerId,
       'id': id,
     };
   }

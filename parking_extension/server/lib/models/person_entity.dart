@@ -27,7 +27,7 @@ class PersonEntity {
   Map<String, dynamic> toJson() {
     return {
       "namn": namn,
-      "personummer": personnummer,
+      "personnummer": personnummer,
       "vehiclesIds": vehiclesIds,
       "id": id,
     };
