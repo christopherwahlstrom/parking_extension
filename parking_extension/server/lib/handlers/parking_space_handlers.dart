@@ -37,7 +37,7 @@ Future<Response> getParkingSpacesHandler(Request request) async {
   }
 }
 
-Future<Response> getParkingSpaceHandler(Request request, String id) async {
+Future<Response> getParkingSpaceByIdHandler(Request request, String id) async {
   try {
     final parkingSpace = await parkingSpaceRepository.getById(id);
     if (parkingSpace == null) {

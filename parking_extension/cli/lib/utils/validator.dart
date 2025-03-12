@@ -18,4 +18,17 @@ class Validator {
     final index = int.parse(value!);
     return index >= 1 && index < list.length + 1;
   }
+
+  static bool isDouble(String? value) {
+    if (value == null) {
+      return false;
+    }
+    final n = double.tryParse(value);
+    return n != null;
+  }
+
+  static bool isDateTime(String? value) {
+    if (value == null) return false;
+    return DateTime.tryParse(value) != null;
+  }
 }

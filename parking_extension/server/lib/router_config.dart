@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:server/handlers/person_handlers.dart';
 import 'package:server/handlers/vehicle_handlers.dart';
+import 'package:server/handlers/parking_space_handlers.dart';
+import 'package:server/handlers/parking_handlers.dart';
 import 'package:shelf_router/shelf_router.dart';
 
 class ServerConfig {
@@ -33,7 +35,7 @@ class ServerConfig {
     // ParkingSpace routes
     router.post('/parkingspaces', postParkingSpaceHandler);
     router.get('/parkingspaces', getParkingSpacesHandler);
-    router.get('/parkingspaces/<id>'getParkingSpaceByIdHandler);
+    router.get('/parkingspaces/<id>', getParkingSpaceByIdHandler);
     router.put('/parkingspaces/<id>', updateParkingSpaceHandler);
     router.delete('/parkingspaces/<id>', deleteParkingSpaceHandler);
     // Parking routes
