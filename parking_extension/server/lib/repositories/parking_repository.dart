@@ -15,13 +15,13 @@ class ParkingRepository extends FileRepository<ParkingEntity> {
   }
 
   @override
-  String idFromType(ParkingEntity vehicle) {
-    return vehicle.id;
+  String idFromType(ParkingEntity entity) {
+    return entity.id;
   }
 
   @override
-  Map<String, dynamic> toJson(ParkingEntity vehicle) {
-    return vehicle.toJson();
+  Map<String, dynamic> toJson(ParkingEntity entity) {
+    return entity.toJson();
   }
 
   @override

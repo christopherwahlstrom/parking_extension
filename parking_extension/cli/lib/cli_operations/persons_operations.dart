@@ -106,7 +106,6 @@ class PersonsOperations {
   }
 
   static Future _addVehicleToPerson(Person person) async {
-    // list all vehicles and pick a vehicle to add
 
     var allVehicles = await vehicleRepository.getAll();
     print('Pick a vehicle to add: ');

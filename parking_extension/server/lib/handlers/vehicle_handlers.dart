@@ -1,80 +1,96 @@
 import 'dart:convert';
 
-import 'package:server/repositories/vehicle_repository.dart';
-import 'package:shared/shared.dart';
 import 'package:shelf/shelf.dart';
-import 'package:shelf_router/shelf_router.dart';
+import 'package:server/repositories/vehicle_repository.dart';
+import 'package:server/models/vehicle_entity.dart';
+import 'package:shared/shared.dart';
 
-VehicleRepository repo = VehicleRepository();
+final vehicleRepository = VehicleRepository();
 
 Future<Response> postVehicleHandler(Request request) async {
-  final data = await request.readAsString();
-  final json = jsonDecode(data);
-  var vehicle = Vehicle.fromJson(json);
+  try {
+    final data = await request.readAsString();
+    final json = jsonDecode(data);
+    var vehicle = Vehicle.fromJson(json);
 
-  vehicle = await repo.create(vehicle);
+    var vehicleEntity = await vehicleRepository.create(vehicle.toEntity());
 
-  return Response.ok(
-    jsonEncode(vehicle),
-    headers: {'Content-Type': 'application/json'},
-  );
+    vehicle = vehicleEntity.toModel();
+
+    return Response.ok(
+      jsonEncode(vehicle.toJson()),
+      headers: {'Content-Type': 'application/json'},
+    );
+  } catch (e) {
+    return Response.internalServerError(body: 'Error creating vehicle: $e');
+  }
 }
 
 Future<Response> getVehiclesHandler(Request request) async {
-  final vehicles = await repo.getAll();
+  try {
+    final entities = await vehicleRepository.getAll();
 
-  final payload = vehicles.map((e) => e.toJson()).toList();
+    final vehicles = entities.map((e) => e.toModel()).toList();
 
-  return Response.ok(
-    jsonEncode(payload),
-    headers: {'Content-Type': 'application/json'},
-  );
-}
-
-Future<Response> getVehicleHandler(Request request) async {
-  String? id = request.params["id"];
-
-  if (id != null) {
-    var vehicle = await repo.getById(id);
+    final payload = vehicles.map((e) => e.toJson()).toList();
 
     return Response.ok(
-      jsonEncode(vehicle),
+      jsonEncode(payload),
       headers: {'Content-Type': 'application/json'},
     );
+  } catch (e) {
+    return Response.internalServerError(body: 'Error getting vehicles: $e');
   }
-
-  return Response.badRequest();
 }
 
-Future<Response> updateVehicleHandler(Request request) async {
-  String? id = request.params["id"];
+Future<Response> getVehicleByIdHandler(Request request, String id) async {
+  try {
+    final entity = await vehicleRepository.getById(id);
+    if (entity == null) {
+      return Response.notFound('Vehicle not found');
+    }
 
-  if (id != null) {
+    final vehicle = entity.toModel();
+
+    return Response.ok(
+      jsonEncode(vehicle.toJson()),
+      headers: {'Content-Type': 'application/json'},
+    );
+  } catch (e) {
+    return Response.internalServerError(body: 'Error getting vehicle: $e');
+  }
+}
+
+Future<Response> updateVehicleHandler(Request request, String id) async {
+  try {
     final data = await request.readAsString();
     final json = jsonDecode(data);
-    Vehicle? vehicle = Vehicle.fromJson(json);
-    vehicle = await repo.update(id, vehicle);
+    var vehicle = Vehicle.fromJson(json);
+
+    var entity = vehicle.toEntity();
+    entity = await vehicleRepository.update(id, entity);
+    vehicle = entity.toModel();
 
     return Response.ok(
-      jsonEncode(vehicle),
+      jsonEncode(vehicle.toJson()),
       headers: {'Content-Type': 'application/json'},
     );
+  } catch (e) {
+    return Response.internalServerError(body: 'Error updating vehicle: $e');
   }
-
-  return Response.badRequest();
 }
 
-Future<Response> deleteVehicleHandler(Request request) async {
-  String? id = request.params["id"];
+Future<Response> deleteVehicleHandler(Request request, String id) async {
+  try {
+    final entity = await vehicleRepository.delete(id);
 
-  if (id != null) {
-    var vehicle = await repo.delete(id);
+    final vehicle = entity.toModel();
 
     return Response.ok(
-      jsonEncode(vehicle),
+      jsonEncode(vehicle.toJson()),
       headers: {'Content-Type': 'application/json'},
     );
+  } catch (e) {
+    return Response.internalServerError(body: 'Error deleting vehicle: $e');
   }
-
-  return Response.badRequest();
 }

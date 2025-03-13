@@ -28,7 +28,7 @@ class ServerConfig {
     // Vehicle routes
     router.post('/vehicles', postVehicleHandler); 
     router.get('/vehicles', getVehiclesHandler); 
-    router.get('/vehicles/<id>', getVehicleHandler); 
+    router.get('/vehicles/<id>', getVehicleByIdHandler); 
     router.put('/vehicles/<id>', updateVehicleHandler); 
     router.delete('/vehicles/<id>', deleteVehicleHandler); 
 

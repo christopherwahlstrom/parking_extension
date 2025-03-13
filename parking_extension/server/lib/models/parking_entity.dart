@@ -44,7 +44,7 @@ class ParkingEntity {
 
     return Parking(
       id: id,
-      fordon: vehicle!,
+      fordon: vehicle!.toModel(),
       parkeringsplats: parkingSpace!,
       starttid: DateTime.parse(starttid),
       sluttid: sluttid != null ? DateTime.parse(sluttid!) : null,

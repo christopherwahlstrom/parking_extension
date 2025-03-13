@@ -10,12 +10,12 @@ class PersonRepository extends FileRepository<PersonEntity> {
   }
 
   @override
-  String idFromType(PersonEntity vehicle) {
-    return vehicle.id;
+  String idFromType(PersonEntity entity) {
+    return entity.id;
   }
 
   @override
-  Map<String, dynamic> toJson(PersonEntity vehicle) {
-    return vehicle.toJson();
+  Map<String, dynamic> toJson(PersonEntity entity) {
+    return entity.toJson();
   }
 }

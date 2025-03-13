@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:server/models/parking_space_entity.dart';
 import 'package:server/repositories/file_repository.dart';
 
@@ -13,18 +12,18 @@ class ParkingSpaceRepository extends FileRepository<ParkingSpaceEntity> {
   }
 
   @override
-  String idFromType(ParkingSpaceEntity parkingSpace) {
-    return parkingSpace.id;
+  String idFromType(ParkingSpaceEntity entity) {
+    return entity.id;
   }
 
   @override
-  Map<String, dynamic> toJson(ParkingSpaceEntity parkingSpace) {
-    return parkingSpace.toJson();
+  Map<String, dynamic> toJson(ParkingSpaceEntity entity) {
+    return entity.toJson();
   }
 
   @override
   Future<List<ParkingSpaceEntity>> getAll() async {
-    final file = File(fileName);
+    final file = File(filePath); 
     if (!await file.exists()) {
       return [];
     }
