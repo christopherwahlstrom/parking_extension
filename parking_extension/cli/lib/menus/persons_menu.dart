@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cli/cli_operations/persons_operations.dart';
 import 'package:cli/utils/console.dart';
 

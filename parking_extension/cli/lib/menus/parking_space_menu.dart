@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:cli/cli_operations/parking_space_operations.dart';
 import 'package:cli/utils/console.dart';
 

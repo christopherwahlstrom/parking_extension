@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:shelf/shelf.dart';
 import 'package:server/repositories/parking_repository.dart';
+import 'package:server/models/parking_entity.dart';
 import 'package:shared/shared.dart';
 
 final parkingRepository = ParkingRepository();
@@ -12,7 +13,9 @@ Future<Response> postParkingHandler(Request request) async {
     final json = jsonDecode(data);
     var parking = Parking.fromJson(json);
 
-    parking = await parkingRepository.create(parking);
+    var parkingEntity = await parkingRepository.create(parking.toEntity());
+
+    parking = await parkingEntity.toModel();
 
     return Response.ok(
       jsonEncode(parking.toJson()),
@@ -25,11 +28,14 @@ Future<Response> postParkingHandler(Request request) async {
 
 Future<Response> getParkingsHandler(Request request) async {
   try {
-    final parkings = await parkingRepository.getAll();
-    final json = parkings.map((e) => e.toJson()).toList();
+    final entities = await parkingRepository.getAll();
+
+    final parkings = await Future.wait(entities.map((e) => e.toModel()));
+
+    final payload = parkings.map((e) => e.toJson()).toList();
 
     return Response.ok(
-      jsonEncode(json),
+      jsonEncode(payload),
       headers: {'Content-Type': 'application/json'},
     );
   } catch (e) {
@@ -39,10 +45,12 @@ Future<Response> getParkingsHandler(Request request) async {
 
 Future<Response> getParkingByIdHandler(Request request, String id) async {
   try {
-    final parking = await parkingRepository.getById(id);
-    if (parking == null) {
+    final entity = await parkingRepository.getById(id);
+    if (entity == null) {
       return Response.notFound('Parking not found');
     }
+
+    final parking = await entity.toModel();
 
     return Response.ok(
       jsonEncode(parking.toJson()),
@@ -59,7 +67,9 @@ Future<Response> updateParkingHandler(Request request, String id) async {
     final json = jsonDecode(data);
     var parking = Parking.fromJson(json);
 
-    parking = await parkingRepository.update(id, parking);
+    var entity = parking.toEntity();
+    entity = await parkingRepository.update(id, entity);
+    parking = await entity.toModel();
 
     return Response.ok(
       jsonEncode(parking.toJson()),
@@ -72,8 +82,14 @@ Future<Response> updateParkingHandler(Request request, String id) async {
 
 Future<Response> deleteParkingHandler(Request request, String id) async {
   try {
-    await parkingRepository.delete(id);
-    return Response.ok('Parking deleted');
+    final entity = await parkingRepository.delete(id);
+
+    final parking = await entity.toModel();
+
+    return Response.ok(
+      jsonEncode(parking.toJson()),
+      headers: {'Content-Type': 'application/json'},
+    );
   } catch (e) {
     return Response.internalServerError(body: 'Error deleting parking: $e');
   }

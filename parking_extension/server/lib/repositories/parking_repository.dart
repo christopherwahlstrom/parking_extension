@@ -1,24 +1,38 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:server/models/parking.dart';
+import 'package:server/models/parking_entity.dart';
 import 'package:server/repositories/file_repository.dart';
 
-class ParkingRepository extends FileRepository<Parking> {
-  ParkingRepository() : super('parkings.json');
+class ParkingRepository extends FileRepository<ParkingEntity> {
+  final String fileName;
+
+  ParkingRepository() : fileName = 'parkings.json', super('parkings.json');
 
   @override
-  Parking fromJson(Map<String, dynamic> json) {
-    return Parking.fromJson(json);
+  ParkingEntity fromJson(Map<String, dynamic> json) {
+    return ParkingEntity.fromJson(json);
   }
 
   @override
-  String idFromType(Parking parking) {
-    return parking.id;
+  String idFromType(ParkingEntity vehicle) {
+    return vehicle.id;
   }
 
   @override
-  Map<String, dynamic> toJson(Parking parking) {
-    return parking.toJson();
+  Map<String, dynamic> toJson(ParkingEntity vehicle) {
+    return vehicle.toJson();
+  }
+
+  @override
+  Future<List<ParkingEntity>> getAll() async {
+    final file = File(fileName);
+    if (!await file.exists()) {
+      return [];
+    }
+
+    final contents = await file.readAsString();
+    final List<dynamic> jsonList = jsonDecode(contents);
+    return jsonList.map((json) => fromJson(json)).toList();
   }
 }
